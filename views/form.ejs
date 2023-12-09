@@ -17,6 +17,26 @@
             height: 100vh;
         }
 
+
+	#wsoutput{
+		margin: 4px;
+		width: 100px;
+		height: 20px;
+		border: 3px solid red ;
+		background-color: #4caf50;
+	}
+
+
+	#lbdiv{
+		margin: 4px;
+		widht: 100px;
+		height: 20px;
+ 		border: 3px solid red ; 
+		background-color: #4caf50;
+
+	}
+
+
         form {
             background-color: #fff;
             padding: 20px;
@@ -97,6 +117,27 @@ function createlb(){
 
     }
 
+
+
+
+
+    function createwebserver(){
+	    let websrvip = document.getElementById("websrvip").value;
+	    let wsusername =  document.getElementById("wsusername").value;
+	    let wspassword = document.getElementById("wspassword").value;
+	     var xhttp = new XMLHttpRequest();
+	      xhttp.onreadystatechange = function() {
+	        if (this.readyState == 4) {
+        	 document.getElementById("wsoutput").innerHTML = this.responseText;
+	        }
+	      };
+	      xhttp.open("GET", "http://192.168.126.128:2323/createws?websrvip="+websrvip +"&"+"wsusername="+wsusername +"&" +"wspassword="+wspassword, true);
+	      xhttp.send();
+
+       }
+    
+
+
     </script>
 
 
@@ -104,22 +145,54 @@ function createlb(){
 
 </head>
 <body>
+  <div id="loadBalancer" name="loadBalancer">
+ 
+     <form id="dataForm" action="/collectdata" method="POST">
+         <label for="name">IP of LoadBalancer:</label>
+         <input type="text" id="lbip" name="lbip" required>
+ 
+         <label for="name">Username</label>
+         <input type="text" id="username" name="username" required>
+  
+         <label >password</label>
+     	<input type="password" id="password" name="password" required>
+  
 
-    <form id="dataForm" action="/collectdata" method="POST">
-        <label for="name">IP of LB:</label>
-        <input type="text" id="lbip" name="lbip" required>
-
-        <label for="name">Username</label>
-        <input type="text" id="username" name="username" required>
-
-        <label >password</label>
-	<input type="password" id="password" name="password" required>
-
-
-        <button type="button" onclick="createlb()">Submit</button>
-    </form>
+         <button type="button" onclick="createlb()">Submit</button>
+     </form>
 	
-    <div id="lbdiv" name="lbdiv">this is  lbdiv</div>
+      <div id="lbdiv" name="lbdiv">this is  lbdiv</div>
+
+
+   </div>
+
+
+
+
+
+   <div id="webserver" name="webserver">
+	 <form id="dataForm" action="/collectdata" method="POST">
+         <label for="name">IP of WebServer:</label>
+         <input type="text" id="websrvip" name="websrvip" required>
+
+         <label for="name">Username</label>
+         <input type="text" id="wsusername" name="wsusername" required>
+
+         <label >password</label>
+        <input type="password" id="wspassword" name="wspassword" required>
+
+
+         <button type="button" onclick="createwebserver()">Submit</button>
+     </form>
+
+      <div id="wsoutput" name="wsoutput">out put for web servers  </div>
+
+   </div>
+
+
+
+
+
 </body>
 </html>
  

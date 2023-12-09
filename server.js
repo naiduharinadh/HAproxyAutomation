@@ -30,19 +30,15 @@ app.get("/collectData", (req,resp)=>{
 
 	console.log(username,lbip,password);
 	exec(`sed -i '3i\\${lbip} ansible_user=${username} ansible_password=${password} ' /etc/ansible/hosts`,(stdout,stderr,error)=>{
-		if (stdout){
-			exec("MakeLB.sh",(stdout,stderr,error)=>{
-				resp.send("LoadBalancer created on the top of the"+lbip);
+		console.log("this is upper block ");
+		exec("ansible-playbook  ./scripts/haProxy.yml", (ansibleOut, ansibleStderr, anserror )=> {
 
-			})
-		}
 
-		else if(stderr){
-			resp.send(stderr);
-		}
-		else if(error){
-			resp.send(error);
-		}
+		console.log("this is harinadh..... sub child ");
+		resp.send(ansibleOut);
+
+		})
+//		resp.send(ansibleOut); 
 
 	})
 
@@ -51,6 +47,28 @@ app.get("/collectData", (req,resp)=>{
 
 
 })
+
+
+
+app.get("/createws",(req,resp)=>{
+
+	const websrvip = req.query.websrvip;
+	const wsusername= req.query.username;
+	const wspassword= req.query.wspassword;
+	exec( `sed -i'5i\\${websrvip}  ansible_user=${wsusername}   ansible_password=${wspassword}' /etc/ansible/hosts` , (stdout, stderr, error) => {
+		console.log("web server slaves are added "); 
+		exec("ansible-playbook  ./scripts/HTTPset.yml", (wsplayout, wsplaystderror, playerror)=>{
+			resp.send(wsplayout);
+
+		})
+
+
+	} )
+
+})
+
+
+
 
 app.listen(2323, ()=>{
 
