@@ -1,0 +1,23 @@
+- hosts: LoadBalancer
+  vars:
+    packageName: 
+      - "haproxy"
+  tasks:
+    - name: installing  " {{ packageName }}" httpd 
+      package:
+        name : "{{ packageName }}"
+
+    - name: emabling haproxy 
+      service:
+        name: "haproxy"
+        state: reloaded
+        enabled: true
+
+    - name: disable firewalld by exposing the port to the public
+      command: firewall-cmd --zone=public --add-port=5000/tcp --permanent
+
+
+    - name: copying loadBalancer haproxy.cfg file
+      template:
+        src: /root/cronJobs/ansibleTemplate/template.j2
+        dest: /etc/haproxy/haproxy.cfg

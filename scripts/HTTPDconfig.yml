@@ -1,0 +1,22 @@
+- hosts: webServers
+  vars:
+    packageNames:
+      - php
+      - httpd
+  tasks:
+    - name: installing packages "{{ packageNames }}"
+      package:
+       state: present
+       name: "{{ packageName }}"
+
+    - name: starting and enablinng services
+      service:
+        name: httpd
+        state: reloaded
+        enabled: true
+
+    - name: copying php OR document dir files
+      template:
+        src: /var/www/html/index.php
+        dest: /var/www/html/index.php
+
