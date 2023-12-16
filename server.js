@@ -29,9 +29,9 @@ app.get("/collectData", (req,resp)=>{
 	const password= req.query.password;
 
 	console.log(username,lbip,password);
-	exec(`sed -i '3i\\${lbip} ansible_user=${username} ansible_password=${password} ' /etc/ansible/hosts`,(stdout,stderr,error)=>{
+	exec(`sed -i '3i\\${lbip} ansible_user=${username} ansible_password=${password} ' /etc/ansible/hosts`,(error,stdoutput,stderr)=>{
 		console.log("this is upper block ");
-		exec("ansible-playbook  ./scripts/haProxy.yml", (ansibleOut, ansibleStderr, anserror )=> {
+		exec("ansible-playbook  ./scripts/haProxy.yml", (anserror,ansibleOut, ansibleStderr )=> {
 
 
 		console.log("this is harinadh..... sub child ");
@@ -55,9 +55,9 @@ app.get("/createws",(req,resp)=>{
 	const websrvip = req.query.websrvip;
 	const wsusername= req.query.username;
 	const wspassword= req.query.wspassword;
-	exec( `sed -i'5i\\${websrvip}  ansible_user=${wsusername}   ansible_password=${wspassword}' /etc/ansible/hosts` , (stdout, stderr, error) => {
+	exec( `sed -i'5i\\${websrvip}  ansible_user=${wsusername}   ansible_password=${wspassword}' /etc/ansible/hosts` , ( error, stdout, stderr ) => {
 		console.log("web server slaves are added "); 
-		exec("ansible-playbook  ./scripts/HTTPset.yml", (wsplayout, wsplaystderror, playerror)=>{
+		exec("ansible-playbook  ./scripts/HTTPset.yml", ( playerror, wsplayout, wsplaystderror )=>{
 			resp.send(wsplayout);
 
 		})
