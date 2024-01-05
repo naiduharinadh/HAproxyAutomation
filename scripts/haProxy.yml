@@ -1,4 +1,5 @@
 - hosts: LoadBalancer
+  become: true
   vars:
     packageName: 
       - "haproxy"

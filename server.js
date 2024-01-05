@@ -21,7 +21,7 @@ resp.render("form")
 })
 
 
-app.get("/collectData", (req,resp)=>{
+app.get("/collectdata", (req,resp)=>{
 
 
 	const username = req.query.username;
@@ -53,11 +53,12 @@ app.get("/collectData", (req,resp)=>{
 app.get("/createws",(req,resp)=>{
 
 	const websrvip = req.query.websrvip;
-	const wsusername= req.query.username;
+	const wsusername= req.query.wsusername;
 	const wspassword= req.query.wspassword;
-	exec( `sed -i'5i\\${websrvip}  ansible_user=${wsusername}   ansible_password=${wspassword}' /etc/ansible/hosts` , ( error, stdout, stderr ) => {
+	console.log("workspace ips are ",websrvip, wsusername, wspassword);
+	exec( `sed -i '6i\\${websrvip}  ansible_user=${wsusername}   ansible_password=${wspassword}' /etc/ansible/hosts` , ( error, stdout, stderr ) => {
 		console.log("web server slaves are added "); 
-		exec("ansible-playbook  ./scripts/HTTPset.yml", ( playerror, wsplayout, wsplaystderror )=>{
+		exec("ansible-playbook  ./scripts/HTTPDconfig.yml", ( playerror, wsplayout, wsplaystderror ) => {
 			resp.send(wsplayout);
 
 		})
