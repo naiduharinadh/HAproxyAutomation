@@ -14,7 +14,7 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.json());
 
 
-
+//updated line from harinadh
 app.get("/home", (req,resp)=>{
 
 	resp.render("form")
@@ -88,5 +88,5 @@ app.post("/terraform",(req,resp)=>{
 
 app.listen(2323, ()=>{
 
-console.log("server started on 2323 ");
+console.log("server started on portnumber  2323 ");
 })
