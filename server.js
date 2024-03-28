@@ -1,4 +1,5 @@
 const express = require("express")
+const bodyParser = require('body-parser');
 const path = require('path');
 const { exec } = require('child_process');
 //the above line exactly equal to 
@@ -9,21 +10,18 @@ const app = express();
 
 // Set the 'views' directory
 app.set('views', path.join(__dirname, 'views'));
-
-
 app.set('view engine', 'ejs');
+app.use(bodyParser.json());
+
 
 
 app.get("/home", (req,resp)=>{
 
-resp.render("form")
-
+	resp.render("form")
 })
 
 
 app.get("/collectdata", (req,resp)=>{
-
-
 	const username = req.query.username;
 	const lbip=req.query.lbip;
 	const password= req.query.password;
@@ -48,8 +46,6 @@ app.get("/collectdata", (req,resp)=>{
 
 })
 
-
-
 app.get("/createws",(req,resp)=>{
 
 	const websrvip = req.query.websrvip;
@@ -68,7 +64,26 @@ app.get("/createws",(req,resp)=>{
 
 })
 
+app.post("/terraform",(req,resp)=>{
+    const { cloudProvider,workspace, variables } = req.body;
+    let terraformCommand = `terraform apply `;
+	// REFERENCE COMMAND    terraform apply -var="region=us-west-2" -var="instance_type=t2.micro"
+/*
+    variables.forEach((variable, index) => {
+        terraformCommand += ` -var="${variable}"`;
+    });
 
+	if ( cloudProvider === "aws"){
+		if(workspace === "dev"){//change the work space to that by " terraform.exe workspace select dev "}
+			//similarly for the deploy
+			//also for the test stage also
+	}
+	else if(cloudProvider === "azure"){}
+*/
+    console.log('Received form data:', variables);
+
+    resp.send('Form data received successfully!');
+})
 
 
 app.listen(2323, ()=>{
