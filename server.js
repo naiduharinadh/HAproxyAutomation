@@ -65,7 +65,7 @@ app.get("/createws",(req,resp)=>{
 })
 
 app.post("/terraform",(req,resp)=>{
-    const { cloudProvider,workspace, variables } = req.body;
+    const { cloudProvider,workenv, variables } = req.body;
     let terraformCommand = `terraform apply `;
 	// REFERENCE COMMAND    terraform apply -var="region=us-west-2" -var="instance_type=t2.micro"
 /*
@@ -80,7 +80,7 @@ app.post("/terraform",(req,resp)=>{
 	}
 	else if(cloudProvider === "azure"){}
 */
-    console.log('Received form data:', variables);
+    console.log('Received form data:', cloudProvider,workenv,variables[1].value );
 
     resp.send('Form data received successfully!');
 })

@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -16,26 +16,6 @@
             justify-content: center;
             height: 100vh;
         }
-
-
-	#wsoutput{
-		margin: 4px;
-		width: 100px;
-		height: 20px;
-		border: 3px solid red ;
-		background-color: #4caf50;
-	}
-
-
-	#lbdiv{
-		margin: 4px;
-		widht: 100px;
-		height: 20px;
- 		border: 3px solid red ; 
-		background-color: #4caf50;
-
-	}
-
 
         form {
             background-color: #fff;
@@ -68,194 +48,149 @@
             width: 100%;
         }
     </style>
-
-
-
-
-
-
-    <script>
-	   /*
-	    function createlb(){
-	
-		    var xhr = new XMLHttpRequest();
-		    xhr.open('GET',"http://192.168.126.128/collectData" , true);
-		    xhr.onload = function(){
-					if (xhr.status >= 200 && xhr.status < 300){
-							document.getElementById('output').innerHTML = xhr.responseText;
-						    }
-					else{
-						console.log("request failed with status" + xhr.status);
-						    }
-	
-				};
-	
-
-			    xhr.onerror = function(){
-
-				console.log("network error");
-				};
-
-	
-	 	   xhr.send();
-	}*/
-
-function createlb(){
-
-    let lbip = document.getElementById("lbip").value;
-    let username =  document.getElementById("username").value;
-    let password = document.getElementById("password").value;
-     var xhttp = new XMLHttpRequest();
-      xhttp.onreadystatechange = function() {
-        if (this.readyState == 4) {
-         document.getElementById("lbdiv").innerHTML = this.responseText;
-        }
-      };
-      xhttp.open("GET", "http://192.168.1.34:2323/collectdata?lbip="+lbip +"&"+"username="+username +"&" +"password="+password, true);
-      xhttp.send();
-
-
-    }
-
-
-
-
-    function createwebserver(){
-	 let websrvip    = document.getElementById("websrvip").value;
-	 let wsusername  = document.getElementById("wsusername").value;
-	 let wspassword  = document.getElementById("wspassword").value;
-	     var xhttp   = new XMLHttpRequest();
-	      xhttp.onreadystatechange = function() {
-	        if (this.readyState == 4) {
-        	 document.getElementById("wsoutput").innerHTML = this.responseText;
-	        }
-	      };
-	      xhttp.open("GET", "http://3.24.138.162:2323/createws?websrvip="+websrvip +"&"+"wsusername="+wsusername+"&" +"wspassword="+wspassword, true);
-	      xhttp.send();
-
-       }
-    
-
-
-    </script>
-
-
-
-
 </head>
 <body>
 
+<form id="terraformForm">
+    <div>
+        <label for="cloudProvider">Select Cloud Provider:</label>
+        <select id="cloudProvider" name="cloudProvider">
+            <option value="aws">AWS</option>
+            <option value="azure">Azure</option>
+        </select>
 
-
- <form id="terraformForm">
+        <select id="workenv" name="workenv">
+            <option value="dev">DEVELOP</option>
+            <option value="test">TEST</option>
+            <option value="deployment">DEPLOYMENT</option>
+        </select>
+    </div>
+    <div id="variableInputs">
         <div>
-            <label for="cloudProvider">Select Cloud Provider:</label>
-            <select id="cloudProvider" name="cloudProvider">
-                <option value="aws">AWS</option>
-                <option value="azure">Azure</option>
-            </select>
-
-	    <select id="workspace" name="workspace">
-                <option value="dev">DEVELOP</option>
-                <option value="test">TEST</option>
-		<option value="deployment">DEPLOYMENT</option>
-            </select>
+            <label for="variable1">Variable 1:</label>
+            <input type="text" id="variable1" name="variables[]" />
         </div>
-        <div id="variableInputs">
-            <div>
-                <label for="variable1">Variable 1:</label>
-                <input type="text" id="variable1" name="variables[]" />
-            </div>
-        </div>
-        <button type="button" onclick="addInput()">Add Variable</button>
-        <button type="button" onclick="executeTerraform()">Execute Terraform</button>
-    </form>
+    </div>
+    <button type="button" onclick="addInput()">Add Variable</button>
+    <button type="button" onclick="executeTerraform()">Execute Terraform</button>
+</form>
+<div id="TfResp" >TFresp </div>
+<script>
+    function addInput() {
+        var inputContainer = document.getElementById("variableInputs");
+        var variableCount = inputContainer.children.length + 1; // +1 to create unique IDs
+        var newInput = document.createElement("div");
+        newInput.innerHTML = '<label for="variable' + variableCount + '">Variable ' + variableCount + ':</label>' +
+            '<input type="text" id="variable' + variableCount + '" name="variables[]" />';
+        inputContainer.appendChild(newInput);
+    }
 
-    <script>
-        function addInput() {
-            var inputContainer = document.getElementById("variableInputs");
-            var variableCount = inputContainer.children.length + 1; // +1 to create unique IDs
-            var newInput = document.createElement("div");
-  	    newInput.innerHTML = '<label for="variable' + variableCount + '">Variable ' + variableCount + ':</label>' +
-                         '<input type="text" id="variable' + variableCount + '" name="variables[' + (variableCount - 1) + ']" />';
-            inputContainer.appendChild(newInput);
-        }
+    function executeTerraform() {
+        var formData = {
+            cloudProvider: document.getElementById("cloudProvider").value,
+            workenv: document.getElementById("workenv").value,
+            variables: collectVariables()
+        };
+        // Convert formData to JSON
+        var jsonData = JSON.stringify(formData);
 
-        function executeTerraform() {
-            var formData = new FormData(document.getElementById("terraformForm"));
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "http://3.24.138.162:2323/terraform", true);
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        console.log("Response:", xhr.responseText);
-                    } else {
-                        console.error("Error:", xhr.status);
-                    }
+        // Send jsonData to the server...
+        // Example using XMLHttpRequest:
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://13.211.56.73:2323/terraform", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    console.log("Response:", xhr.responseText);
+			document.getElementById("TfResp").innerHTML = this.responseText;
+                } else {
+                    console.error("Error:", xhr.status);
                 }
-            };
-            xhr.send(JSON.stringify(Object.fromEntries(formData)));
+            }
+        };
+        xhr.send(jsonData);
+    }
+
+    function collectVariables() {
+        var variables = [];
+        var variableInputs = document.getElementsByName("variables[]");
+        for (var i = 0; i < variableInputs.length; i++) {
+            var variable = variableInputs[i].value;
+            variables.push({ name: "variable" + (i + 1), value: variable });
         }
-    </script>
+        return variables;
+    }
+</script>
 
+<div id="loadBalancer" name="loadBalancer">
+    <form id="dataForm" action="/collectdata" method="GET">
+        <label for="name">IP of LoadBalancer:</label>
+        <input type="text" id="lbip" name="lbip" required />
 
+        <label for="name">Username</label>
+        <input type="text" id="username" name="username" required />
 
-  <div id="loadBalancer" name="loadBalancer">
- 
-     <form id="dataForm" action="/collectdata" method="GET">
-         <label for="name">IP of LoadBalancer:</label>
-         <input type="text" id="lbip" name="lbip" required />
- 
-         <label for="name">Username</label>
-         <input type="text" id="username" name="username" required />
-  
-         <label >password</label>
-     	<input type="password" id="password" name="password" required />
-  
+        <label >password</label>
+        <input type="password" id="password" name="password" required />
 
-         <button type="button" onclick="createlb()">Submit</button>
-     </form>
-	
-      <div id="lbdiv" name="lbdiv">this is  lbdiv</div>
+        <button type="button" onclick="createlb()">Submit</button>
+    </form>
+    <div id="lbdiv" name="lbdiv">this is  lbdiv</div>
+</div>
 
+<div id="webserver" name="webserver">
+    <form id="workspace" action="/createws" method="GET">
+        <label for="name">IP of WebServer:</label>
+        <input type="text" id="websrvip" name="websrvip" required />
 
-   </div>
+        <label for="name">Username</label>
+        <input type="text" id="wsusername" name="wsusername" required />
 
-
-
-
-
-   <div id="webserver" name="webserver">
-	 <form id="workspace" action="/createws" method="GET">
-         <label for="name">IP of WebServer:</label>
-         <input type="text" id="websrvip" name="websrvip" required />
-
-         <label for="name">Username</label>
-         <input type="text" id="wsusername" name="wsusername" required />
-
-         <label >password</label>
+        <label >password</label>
         <input type="password" id="wspassword" name="wspassword" required />
 
+        <button type="button" onclick="createwebserver()">Submit</button>
+    </form>
+    <div id="wsoutput" name="wsoutput">out put for web servers  </div>
+</div>
 
-         <button type="button" onclick="createwebserver()">Submit</button>
-     </form>
-
-      <div id="wsoutput" name="wsoutput">out put for web servers  </div>
-
-   </div>
-
-
-
-upload files into your document directory : 
-   <form action="/upload" method="post" enctype="multipart/form-data">
+<form action="/upload" method="post" enctype="multipart/form-data">
     <label for="fileInput">Choose a file:</label>
     <input type="file" id="fileInput" name="fileInput" accept=".jpg, .jpeg, .png" />
     <button type="submit">Upload</button>
-  </form>
+</form>
 
+<script>
+    function createlb() {
+        let lbip = document.getElementById("lbip").value;
+        let username = document.getElementById("username").value;
+        let password = document.getElementById("password").value;
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4) {
+                document.getElementById("lbdiv").innerHTML = this.responseText;
+            }
+        };
+        xhttp.open("GET", "http://192.168.1.34:2323/collectdata?lbip=" + lbip + "&" + "username=" + username + "&" + "password=" + password, true);
+        xhttp.send();
+    }
 
+    function createwebserver() {
+        let websrvip = document.getElementById("websrvip").value;
+        let wsusername = document.getElementById("wsusername").value;
+        let wspassword = document.getElementById("wspassword").value;
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4) {
+                document.getElementById("wsoutput").innerHTML = this.responseText;
+            }
+        };
+        xhttp.open("GET", "http://3.24.138.162:2323/createws?websrvip=" + websrvip + "&" + "wsusername=" + wsusername + "&" + "wspassword=" + wspassword, true);
+        xhttp.send();
+    }
+</script>
 
 </body>
 </html>
- 
+
