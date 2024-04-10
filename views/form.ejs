@@ -97,13 +97,13 @@
         // Send jsonData to the server...
         // Example using XMLHttpRequest:
         var xhr = new XMLHttpRequest();
-	    xhr.open("POST", "http://<%=ip%>:2323/terraform", true);
+            xhr.open("POST", "http://<%=ip%>:2323/terraform", true);
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.onreadystatechange = function () {
             if (xhr.readyState === XMLHttpRequest.DONE) {
                 if (xhr.status === 200) {
                    // console.log("Response:", xhr.responseText);
-		     document.getElementById("TfResp").innerHTML = this.responseText;
+                     document.getElementById("TfResp").innerHTML = this.responseText;
                 } else {
                     console.error("Error:", xhr.status);
                 }
@@ -160,8 +160,34 @@
     <input type="file" id="fileInput" name="fileInput" accept=".jpg, .jpeg, .png" />
     <button type="submit">Upload</button>
 </form>
-
+<div id="updateMessage" > update message </div>
 <script>
+
+
+                // Establish WebSocket connection
+        const socket = new WebSocket('ws://<%= ip %>:2323');
+
+        // Event listener for WebSocket connection opened
+        socket.onopen = function () {
+            console.log('WebSocket connection established');
+        };
+
+        // Event listener for receiving messages from WebSocket server
+        socket.onmessage = function (event) {
+            // Display real-time updates received from server
+            const updateMessage = event.data;
+            document.getElementById("updateMessage").innerText = updateMessage;
+        };
+
+        // Event listener for WebSocket connection closed
+        socket.onclose = function () {
+            console.log('WebSocket connection closed');
+        };
+
+
+
+
+
     function createlb() {
         let lbip = document.getElementById("lbip").value;
         let username = document.getElementById("username").value;
@@ -193,4 +219,3 @@
 
 </body>
 </html>
-
