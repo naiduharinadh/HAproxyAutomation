@@ -17,3 +17,6 @@ npm install
 addr=$(curl -s https://ifconfig.me)
 sed -i "s/const ip = \".*\"/const ip = \"$addr\"/" server.js
 
+sed -i '16i\export PATH="/root/haproxy/terraform:$PATH" ' /root/.bashrc
+source /root/.bashrc
+
