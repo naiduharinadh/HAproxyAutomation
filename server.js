@@ -10,7 +10,7 @@ const http = require('http');
 //cont exec = childprcs.exec
 
 
-const ip = "3.27.233.225" ;
+const ip = "13.236.52.245" ;
 const app = express();
 
 const server = require('http').createServer(app);
@@ -80,15 +80,6 @@ app.get("/createws",(req,resp)=>{
 
 app.post("/terraform",(req,resp)=>{
 
-
-        // web scoket for live update
-        wss.clients.forEach(client => {
-    if (client.readyState === WebSocket.OPEN) {
-      client.send("this is from the web socket ");
-    }
-  });
-
-
     const { cloudProvider,workenv, variables } = req.body;
     let terraformCommand = `terraform apply `;
         // REFERENCE COMMAND    terraform apply -var="region=us-west-2" -var="instance_type=t2.micro"
@@ -101,49 +92,67 @@ app.post("/terraform",(req,resp)=>{
         terraformCommand += `  --${variable.value}`;
     });
 
-        const command = `bash ./change_workspace.sh ${workenv}`;
+        const command = ` bash change_workspace.sh `;
 
         if ( cloudProvider === "aws"){
                 //command 1 to change the workdir
 //              exec("bash ./scripts/change_workspace.sh" , (err,stdout, stderr)=>{
                 console.log("if block");
-                exec( command , (err,stdout, stderr)=>{
+                exec( " cd ./terraform " , (err,stdout, stderr)=>{
                         if(err){
-                                resp.send(err);
+                                console.log(err);
                         }
                         else if(stderr){
-                                resp.send(stderr);
+                                console.log(stderr);
                         }
                         else{
+                                const output = stdout;
                                 const updateMessage = "Terraform execution in progress...";
                                     wss.clients.forEach(client => {
                                             if (client.readyState === WebSocket.OPEN) {
-                                            client.send(updateMessage);
+                                            client.send( " wss stage 2 ");
                                         }
             });
                                 console.log(stdout);
 //                              resp.send("<pre>"+stdout+"</pre>");
 
-                                exec("cd ./terraform " , (err,stdout, stderr)=>{
+                                exec( command   , (err,stdout, stderr)=>{
                                         console.log("this is else block inside aws ");
 
                                         if(err){
                                                 resp.send(err);
+                                                console.log(err);
                                         }
                                         else if (stderr){
-                                                resp.send(stderr)
+                                                resp.send(stderr);
+                                                console.log(stderr);
                                         }
                                         else{
-                                                exec( " ls " ,(err, stdout, stderr)=>{
-                                                        console.log("ajlajdfl");
-                                                        console.log(stdout);
-                                                        if (err){
-                                                                console.log(err)
-                                                        }
-                                                        else{
-                                                                resp.write (stdout);
-                                                        }
-                                                })
+                                                const tfApply = "bash /root/haproxy/terraform/change_workspace.sh";
+
+                                                                const childProcess = exec(tfApply, (err, stdout, stderr) =>{
+                                                                        if (err || stderr) {
+                                                                                        const errorMessage = err ? err.message : stderr;
+                                                                                        console.error("Error:", errorMessage);
+                                                                                        // Send error message to clients
+                                                                                        wss.clients.forEach(client => {
+                                                                                    if (client.readyState === WebSocket.OPEN) {
+                                                                                client.send("<pre>Error: " + errorMessage + "</pre>");
+                                                                                                }
+                                                                                                });
+                                                                         }
+                                                                        else {
+                                                                                console.log("Stdout:", stdout);
+                                                                                // Send stdout to clients
+                                                                                wss.clients.forEach(client => {
+                                                                                    if (client.readyState === WebSocket.OPEN) {
+                                                                                        client.send("<pre>Stdout: " + stdout + "</pre>");
+                                                                                            }
+                                                                                        });
+                                                                                    }
+                                                                                });
+
+
                                         }
                                 })
                         }
