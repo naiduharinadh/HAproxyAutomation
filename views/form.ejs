@@ -6,23 +6,103 @@
     <title>Data Collection Form</title>
 
     <style>
-        body {
+
+/* CSS Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+.container {
+    width: 100%;
+    max-width: 600px; /* Adjust as needed */
+    padding: 20px;
+}
+
+/* Your existing styles go here with adjustments as needed */
+        body{
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
             padding: 0;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
+            flex-direction: column;
+            margin-left: 10%;
+            min-height: 100vh;
         }
 
+        div[name="lbdiv"] {
+            background-color: lightblue;
+            padding: 20px;
+            margin-bottom: 10px;
+            width: 700px;
+            height: 300px;
+            border-radius: 8px;
+            margin-left: 55%;
+            margin-right: auto;
+            margin-bottom: 10px;
+            margin-top: -58%; /* Adjusted margin-top */
+        }
+
+        div[name="wsoutput"] {
+            background-color: lightblue;
+            padding: 20px;
+            margin-bottom: 10px;
+            width: 700px;
+            height: 300px;
+            border-radius: 8px;
+            margin-left: 55%;
+            margin-right: auto;
+            margin-bottom: 20px;
+            margin-top: -58%;
+        }
+        div[name="loadBalancer"] {
+            margin-top: 20px;
+        }
+
+        div[name="webserver"] {
+            margin-bottom: 20px;
+        }
+        div[name="updateMessage"]{
+            background-color: lightblue;
+            padding: 20px;
+            width: 700px;
+            height: 235px;
+            border-radius: 8px;
+            margin-left: 55%;
+            margin-top: -45%;
+            margin-bottom: 0%;
+        }
+        div:hover[name="lbdiv"], div:hover[name="updateMessage"],div:hover[name="wsoutput"]{
+            cursor: pointer;
+            border: 3px solid black;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: background 3s ease; /* Added transition */
+            background: linear-gradient(45deg, #fdaa12 ,#7ff3de , #33ff57, #4d25ff);
+            background-size: 600% 100%;
+            background-position: 100% 0;
+            margin-bottom: 20px; /* Adjusted margin-bottom */
+        }
         form {
             background-color: #fff;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 300px;
+            transition: background 3s ease; /* Added transition */
+            background: linear-gradient(45deg, #fe5e3a, #33ff57, #4d25ff);
+            background-size: 600% 100%;
+            background-position: 100% 0;
+            margin-bottom: 20px; /* Adjusted margin-bottom */
+        }
+
+        form:hover {
+            background-position: 0 0;
         }
 
         label {
@@ -32,7 +112,7 @@
         }
 
         input {
-            width: 100%;
+            width: calc(100% - 16px); /* Adjusted input width */
             padding: 8px;
             margin-bottom: 16px;
             box-sizing: border-box;
@@ -45,14 +125,14 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            width: 100%;
+            width: calc(100% - 16px); /* Adjusted button width */
         }
     </style>
 </head>
 <body>
-
-<form id="terraformForm">
-    <div>
+<div class="container" >
+<form id="terraformForm" name="tfBox">
+    <div id="tf" name="tf">
         <label for="cloudProvider">Select Cloud Provider:</label>
         <select id="cloudProvider" name="cloudProvider">
             <option value="aws">AWS</option>
@@ -73,8 +153,14 @@
     </div>
     <button type="button" onclick="addInput()">Add Variable</button>
     <button type="button" onclick="executeTerraform()">Execute Terraform</button>
+
 </form>
-<div id="TfResp" >TFresp </div>
+
+
+<div id="updateMessage" name="updateMessage" > update message </div>
+
+
+
 <script>
     function addInput() {
         var inputContainer = document.getElementById("variableInputs");
@@ -136,6 +222,8 @@
 
         <button type="button" onclick="createlb()">Submit</button>
     </form>
+
+
     <div id="lbdiv" name="lbdiv">this is  lbdiv</div>
 </div>
 
@@ -160,7 +248,13 @@
     <input type="file" id="fileInput" name="fileInput" accept=".jpg, .jpeg, .png" />
     <button type="submit">Upload</button>
 </form>
-<div id="updateMessage" > update message </div>
+
+
+
+
+
+
+
 <script>
 
 
@@ -216,6 +310,6 @@
         xhttp.send();
     }
 </script>
-
+</div>
 </body>
 </html>
