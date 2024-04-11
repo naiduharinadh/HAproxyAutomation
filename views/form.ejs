@@ -68,6 +68,8 @@
         div[name="updateMessage"]{
             background-color: lightblue;
             padding: 20px;
+	    overflow: auto;
+
             width: 700px;
             height: 235px;
             border-radius: 8px;
@@ -189,8 +191,7 @@
             if (xhr.readyState === XMLHttpRequest.DONE) {
                 if (xhr.status === 200) {
                    // console.log("Response:", xhr.responseText);
-                     document.getElementById("TfResp").innerHTML = this.responseText;
-                } else {
+
                     console.error("Error:", xhr.status);
                 }
             }

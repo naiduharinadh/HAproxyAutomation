@@ -1,5 +1,5 @@
 #! bin/bash/
-cd ./terraform
+cd /root/haproxy/terraform
 terraform plan 
 
 
