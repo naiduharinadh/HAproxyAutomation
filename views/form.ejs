@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+<html lang="en">
+<head>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -68,6 +69,7 @@
         div[name="updateMessage"]{
             background-color: lightblue;
             padding: 20px;
+            overflow: auto;
             width: 700px;
             height: 235px;
             border-radius: 8px;
@@ -189,8 +191,7 @@
             if (xhr.readyState === XMLHttpRequest.DONE) {
                 if (xhr.status === 200) {
                    // console.log("Response:", xhr.responseText);
-                     document.getElementById("TfResp").innerHTML = this.responseText;
-                } else {
+                    document.getElementById("updateMessage").innerHTML = this.responseText;
                     console.error("Error:", xhr.status);
                 }
             }
@@ -313,3 +314,316 @@
 </div>
 </body>
 </html>
+~                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ~                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ~                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ~                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ~            
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Collection Form</title>
+
+    <style>
+
+/* CSS Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+.container {
+    width: 100%;
+    max-width: 600px; /* Adjust as needed */
+    padding: 20px;
+}
+
+/* Your existing styles go here with adjustments as needed */
+        body{
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            margin-left: 10%;
+            min-height: 100vh;
+        }
+
+        div[name="lbdiv"] {
+            background-color: lightblue;
+            padding: 20px;
+            margin-bottom: 10px;
+            width: 700px;
+            height: 300px;
+            border-radius: 8px;
+            margin-left: 55%;
+            margin-right: auto;
+            margin-bottom: 10px;
+            margin-top: -58%; /* Adjusted margin-top */
+        }
+
+        div[name="wsoutput"] {
+            background-color: lightblue;
+            padding: 20px;
+            margin-bottom: 10px;
+            width: 700px;
+            height: 300px;
+            border-radius: 8px;
+            margin-left: 55%;
+            margin-right: auto;
+            margin-bottom: 20px;
+            margin-top: -58%;
+        }
+        div[name="loadBalancer"] {
+            margin-top: 20px;
+        }
+
+        div[name="webserver"] {
+            margin-bottom: 20px;
+        }
+        div[name="updateMessage"]{
+            background-color: lightblue;
+            padding: 20px;
+            overflow: auto;
+            width: 700px;
+            height: 235px;
+            border-radius: 8px;
+            margin-left: 55%;
+            margin-top: -45%;
+            margin-bottom: 0%;
+        }
+        div:hover[name="lbdiv"], div:hover[name="updateMessage"],div:hover[name="wsoutput"]{
+            cursor: pointer;
+            border: 3px solid black;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: background 3s ease; /* Added transition */
+            background: linear-gradient(45deg, #fdaa12 ,#7ff3de , #33ff57, #4d25ff);
+            background-size: 600% 100%;
+            background-position: 100% 0;
+            margin-bottom: 20px; /* Adjusted margin-bottom */
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            transition: background 3s ease; /* Added transition */
+            background: linear-gradient(45deg, #fe5e3a, #33ff57, #4d25ff);
+            background-size: 600% 100%;
+            background-position: 100% 0;
+            margin-bottom: 20px; /* Adjusted margin-bottom */
+        }
+
+        form:hover {
+            background-position: 0 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input {
+            width: calc(100% - 16px); /* Adjusted input width */
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: calc(100% - 16px); /* Adjusted button width */
+        }
+    </style>
+</head>
+<body>
+<div class="container" >
+<form id="terraformForm" name="tfBox">
+    <div id="tf" name="tf">
+        <label for="cloudProvider">Select Cloud Provider:</label>
+        <select id="cloudProvider" name="cloudProvider">
+            <option value="aws">AWS</option>
+            <option value="azure">Azure</option>
+        </select>
+
+        <select id="workenv" name="workenv">
+            <option value="dev">DEVELOP</option>
+            <option value="test">TEST</option>
+            <option value="deploy">DEPLOYMENT</option>
+        </select>
+    </div>
+    <div id="variableInputs">
+        <div>
+            <label for="variable1">Variable 1:</label>
+            <input type="text" id="variable1" name="variables[]" />
+        </div>
+    </div>
+    <button type="button" onclick="addInput()">Add Variable</button>
+    <button type="button" onclick="executeTerraform()">Execute Terraform</button>
+
+</form>
+
+
+<div id="updateMessage" name="updateMessage" > update message </div>
+
+
+
+<script>
+    function addInput() {
+        var inputContainer = document.getElementById("variableInputs");
+        var variableCount = inputContainer.children.length + 1; // +1 to create unique IDs
+        var newInput = document.createElement("div");
+        newInput.innerHTML = '<label for="variable' + variableCount + '">Variable ' + variableCount + ':</label>' +
+            '<input type="text" id="variable' + variableCount + '" name="variables[]" />';
+        inputContainer.appendChild(newInput);
+    }
+
+    function executeTerraform() {
+        var formData = {
+            cloudProvider: document.getElementById("cloudProvider").value,
+            workenv: document.getElementById("workenv").value,
+            variables: collectVariables()
+        };
+        // Convert formData to JSON
+        var jsonData = JSON.stringify(formData);
+
+        // Send jsonData to the server...
+        // Example using XMLHttpRequest:
+        var xhr = new XMLHttpRequest();
+            xhr.open("POST", "http://<%=ip%>:2323/terraform", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                   // console.log("Response:", xhr.responseText);
+                    document.getElementById("updateMessage").innerHTML = this.responseText;
+                    console.error("Error:", xhr.status);
+                }
+            }
+        };
+        xhr.send(jsonData);
+    }
+
+    function collectVariables() {
+        var variables = [];
+        var variableInputs = document.getElementsByName("variables[]");
+        for (var i = 0; i < variableInputs.length; i++) {
+            var variable = variableInputs[i].value;
+            variables.push({ name: "variable" + (i + 1), value: variable });
+        }
+        return variables;
+    }
+</script>
+
+<div id="loadBalancer" name="loadBalancer">
+    <form id="dataForm" action="/collectdata" method="GET">
+        <label for="name">IP of LoadBalancer:</label>
+        <input type="text" id="lbip" name="lbip" required />
+
+        <label for="name">Username</label>
+        <input type="text" id="username" name="username" required />
+
+        <label >password</label>
+        <input type="password" id="password" name="password" required />
+
+        <button type="button" onclick="createlb()">Submit</button>
+    </form>
+
+
+    <div id="lbdiv" name="lbdiv">this is  lbdiv</div>
+</div>
+
+<div id="webserver" name="webserver">
+    <form id="workspace" action="/createws" method="GET">
+        <label for="name">IP of WebServer:</label>
+        <input type="text" id="websrvip" name="websrvip" required />
+
+        <label for="name">Username</label>
+        <input type="text" id="wsusername" name="wsusername" required />
+
+        <label >password</label>
+        <input type="password" id="wspassword" name="wspassword" required />
+
+        <button type="button" onclick="createwebserver()">Submit</button>
+    </form>
+    <div id="wsoutput" name="wsoutput">out put for web servers  </div>
+</div>
+
+<form action="/upload" method="post" enctype="multipart/form-data">
+    <label for="fileInput">Choose a file:</label>
+    <input type="file" id="fileInput" name="fileInput" accept=".jpg, .jpeg, .png" />
+    <button type="submit">Upload</button>
+</form>
+
+
+
+
+
+
+
+<script>
+
+
+                // Establish WebSocket connection
+        const socket = new WebSocket('ws://<%= ip %>:2323');
+
+        // Event listener for WebSocket connection opened
+        socket.onopen = function () {
+            console.log('WebSocket connection established');
+        };
+
+        // Event listener for receiving messages from WebSocket server
+        socket.onmessage = function (event) {
+            // Display real-time updates received from server
+            const updateMessage = event.data;
+            document.getElementById("updateMessage").innerText = updateMessage;
+        };
+
+        // Event listener for WebSocket connection closed
+        socket.onclose = function () {
+            console.log('WebSocket connection closed');
+        };
+
+
+
+
+
+    function createlb() {
+        let lbip = document.getElementById("lbip").value;
+        let username = document.getElementById("username").value;
+        let password = document.getElementById("password").value;
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4) {
+                document.getElementById("lbdiv").innerHTML = this.responseText;
+            }
+        };
+        xhttp.open("GET", "http://<%=ip%>:2323/collectdata?lbip=" + lbip + "&" + "username=" + username + "&" + "password=" + password, true);
+        xhttp.send();
+    }
+
+    function createwebserver() {
+        let websrvip = document.getElementById("websrvip").value;
+        let wsusername = document.getElementById("wsusername").value;
+        let wspassword = document.getElementById("wspassword").value;
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4) {
+                document.getElementById("wsoutput").innerHTML = this.responseText;
+            }
+        };
+        xhttp.open("GET", "http://<%=ip%>:2323/createws?websrvip=" + websrvip + "&" + "wsusername=" + wsusername + "&" + "wspassword=" + wspassword, true);
+        xhttp.send();
+    }
+</script>
+</div>
+</body>
+</html>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ~                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ~                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ~                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ~            
