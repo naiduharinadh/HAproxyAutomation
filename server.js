@@ -10,7 +10,7 @@ const http = require('http');
 //cont exec = childprcs.exec
 
 
-const ip = "13.236.52.245" ;
+const ip = "13.211.63.163" ;
 const app = express();
 
 const server = require('http').createServer(app);
@@ -51,10 +51,6 @@ app.get("/collectdata", (req,resp)=>{
 
         })
 
-
-//resp.send("data collected");
-
-
 })
 
 app.get("/createws",(req,resp)=>{
@@ -81,24 +77,24 @@ app.get("/createws",(req,resp)=>{
 app.post("/terraform",(req,resp)=>{
 
     const { cloudProvider,workenv, variables } = req.body;
-    let terraformCommand = `terraform apply `;
+    let terraformCommand = `terraform -chdir=/root/haproxy/terraform `;
         // REFERENCE COMMAND    terraform apply -var="region=us-west-2" -var="instance_type=t2.micro"
 
         // terraform plan --dir=./terraform
 
 
-
+/*
     variables.forEach((variable, index) => {
-        terraformCommand += `  --${variable.value}`;
-    });
+        terraformCommand += `  --var="${variable.value}"  `;
+    });*/
 
         const command = ` bash change_workspace.sh `;
 
         if ( cloudProvider === "aws"){
                 //command 1 to change the workdir
 //              exec("bash ./scripts/change_workspace.sh" , (err,stdout, stderr)=>{
-                console.log("if block");
-                exec( " cd ./terraform " , (err,stdout, stderr)=>{
+               
+                exec( "terraform -chdir=/root/haproxy/terraform workspace select " + " " + workenv , (err,stdout, stderr)=>{
                         if(err){
                                 console.log(err);
                         }
@@ -106,38 +102,50 @@ app.post("/terraform",(req,resp)=>{
                                 console.log(stderr);
                         }
                         else{
-				const output = stdout;
-                                const updateMessage = "Terraform execution in progress...";
                                     wss.clients.forEach(client => {
                                             if (client.readyState === WebSocket.OPEN) {
-                                            client.send( " wss stage 2 ");
+                                            client.send( " qork space changed to "+ workenv );
+					    client.send(" work space updated" ); 
                                         }
-            });
+                                 });
                                 console.log(stdout);
-//                              resp.send("<pre>"+stdout+"</pre>");
 
-                                exec( command   , (err,stdout, stderr)=>{
+				let tfplan  = `terraform -chdir=/root/haproxy/terraform  plan  ` ;
+				variables.forEach((variable, index) => {
+       					 tfplan += `  -var="${variable.value}"   `   ;
+				    });
+                                exec( tfplan   , (err,stdout, stderr)=>{
                                         console.log("this is else block inside aws ");
-
-                                        if(err){
-                                                resp.send(err);
-						console.log(err);
-                                        }
-                                        else if (stderr){
-                                                resp.send(stderr);
-						console.log(stderr);
+                                        if(err || stderr){
+                                               const errorMessage = err ? err.message : stderr;
+                                                                                        console.error("Error:", errorMessage);
+                                                                                        // Send error message to clients
+                                                                                        wss.clients.forEach(client => {
+                                                                                    if (client.readyState === WebSocket.OPEN) {
+                                                                                client.send("<pre>" + errorMessage + "</pre>");
+                                                                                                }
+                                                                                                });
                                         }
                                         else{
-						const tfApply = "bash /root/haproxy/terraform/change_workspace.sh";
+						console.log(stdout);
+						wss.clients.forEach(client => {
+                                                                                    if (client.readyState === WebSocket.OPEN) {
+                                                                                client.send("<p>" + stdout + "</p>");
+                                                                                                }
+                                                                                                });
+                                                                         
+
+//						const tfApply = " bash /root/haproxy/terraform/change_workspace.sh " + " " + workenv;
+						const tfApply = " terraform "+ " " + "apply" + " " + "-auto-approve";
+
 
 								const childProcess = exec(tfApply, (err, stdout, stderr) =>{
-									if (err || stderr) {
-										        const errorMessage = err ? err.message : stderr;
-										        console.error("Error:", errorMessage);
+													if (err || stderr) {										        const errorMessage = err ? err.message : stderr;
+  										        console.error("Error:", errorMessage);
 										        // Send error message to clients
 										        wss.clients.forEach(client => {
-										            if (client.readyState === WebSocket.OPEN) {
-										                client.send("<pre>Error: " + errorMessage + "</pre>");
+									            if (client.readyState === WebSocket.OPEN) {
+								                client.send("<pre>Error: " + errorMessage + "</pre>");
 												}
 											        });
 									 } 
@@ -146,7 +154,7 @@ app.post("/terraform",(req,resp)=>{
 									        // Send stdout to clients
 									        wss.clients.forEach(client => {
 									            if (client.readyState === WebSocket.OPEN) {
-									                client.send("<pre>Stdout: " + stdout + "</pre>");
+									                client.send("<pre>" + stdout + "</pre>");
 										            }
 										        });
 										    }
@@ -181,7 +189,6 @@ app.post("/terraform",(req,resp)=>{
     console.log('Received form data:', cloudProvider,workenv,variables );
     console.log(terraformCommand)
 
-//    resp.send('Form data received successfully!');
 })
 
 

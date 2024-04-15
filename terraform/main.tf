@@ -68,7 +68,7 @@ resource "aws_instance" "os1"{
 
 #     instance_type = lookup(var.processore_type , terraform.workspace)
 
-     instance_type = var.workspace_of[terraform.workspace].instance_type
+     instance_type = var.workspace_of[terraform.workspace].inst_type
 
      security_groups = [aws_security_group.allow_all.name]
 

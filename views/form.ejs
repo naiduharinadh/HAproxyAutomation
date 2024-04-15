@@ -69,12 +69,11 @@
             background-color: lightblue;
             padding: 20px;
 	    overflow: auto;
-
             width: 700px;
-            height: 235px;
+            height: 420px;
             border-radius: 8px;
             margin-left: 55%;
-            margin-top: -45%;
+            margin-top: -78%;
             margin-bottom: 0%;
         }
         div:hover[name="lbdiv"], div:hover[name="updateMessage"],div:hover[name="wsoutput"]{
@@ -114,11 +113,34 @@
         }
 
         input {
-            width: calc(100% - 16px); /* Adjusted input width */
+            width: calc(100% - 1px); /* Adjusted input width */
             padding: 8px;
             margin-bottom: 16px;
             box-sizing: border-box;
         }
+
+
+
+
+	#variableInputs div {
+	    margin-bottom: 9px; /* Add margin between input divs */
+	}
+
+
+	#variableInputs div input {
+	    width: calc(100% - 40px); /* Calculate width for input fields (accounting for label width and margin) */
+	    padding: 8px; /* Apply padding to input fields */
+	    box-sizing: border-box; /* Ensure padding and border are included in width calculation */
+	}
+
+#variableInputs div button {
+    margin-left: 7px; /* Add margin between input and button */
+    padding: 8px; /* Apply padding to buttons */
+    box-sizing: border-box; /* Ensure padding and border are included in width calculation */
+}
+
+
+
 
         button {
             background-color: #4caf50;
@@ -129,6 +151,31 @@
             cursor: pointer;
             width: calc(100% - 16px); /* Adjusted button width */
         }
+	#variableInputs{
+	    	height: 250px;
+		overflow: auto;
+	}
+	.delete-btn{
+		width: 24px;
+		margin-left: 250px;
+		border: 2px solid black;
+		background-image: url('https://cdn-icons-png.flaticon.com/128/1214/1214428.png');
+		align-content: centre;
+	
+	}
+	.delete-btn {
+    width: 30px; /* Set the width of the button */
+    height: 30px; /* Set the height of the button */
+    margin-top: 30px;
+    margin-left: 10px; /* Adjust the left margin to create space between the input field and the button */
+    border: 0px solid black; /* Add a border to the button */
+    background-image: url('https://cdn-icons-png.flaticon.com/128/3597/3597073.png'); /* Set the background image of the button */
+    background-size: cover; /* Scale the background image to cover the button */
+    background-repeat: no-repeat; /* Prevent the background image from repeating */
+    background-color: white; 
+    cursor: pointer; /* Set the cursor to indicate the button is clickable */
+}
+
     </style>
 </head>
 <body>
@@ -154,7 +201,7 @@
         </div>
     </div>
     <button type="button" onclick="addInput()">Add Variable</button>
-    <button type="button" onclick="executeTerraform()">Execute Terraform</button>
+    <button type="button" id="executeTerraform" onclick="executeTerraform()"  >Execute Terraform</button>
 
 </form>
 
@@ -163,7 +210,85 @@
 
 
 
+
+<!----- yes or no button div --------->
+
+<div id="myModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Do you want to start the process?</p>
+            <button id="confirmBtn">Yes</button>
+            <button id="cancelBtn">No</button>
+        </div>
+    </div>
+ <style>
+        /* Modal styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 120%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+	#confirmBtn{
+	margin-bottom: 30px;
+	width: 150px;
+	}
+	#cancelBtn{
+		margin-bottom: 30px;
+	        width: 150px;
+	}
+	.modal-content{
+	    background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 40%;
+	    margin-left: 30%;
+	    margin-top: 13%;
+            transition: background 3s ease; /* Added transition */
+            background: linear-gradient(45deg, #fe5e3a, #33ff57, #4d25ff);
+            background-size: 600% 100%;
+            background-position: 100% 0;
+            margin-bottom: 20px; /* Adjusted margin-bottom */
+        }
+
+    	#executeTerraform{
+		margin-top: 8px;
+	}
+       #cancelBtn{
+                margin-bottom: 30px;
+                width: 150px;
+        }
+
+        /* Close button */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+	    margin-top: -10px;
+	    margin-left: 10px;
+        }
+	
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+
 <script>
+
+
+/*
     function addInput() {
         var inputContainer = document.getElementById("variableInputs");
         var variableCount = inputContainer.children.length + 1; // +1 to create unique IDs
@@ -173,7 +298,78 @@
         inputContainer.appendChild(newInput);
     }
 
-    function executeTerraform() {
+*/
+
+function addInput() {
+    var inputContainer = document.getElementById("variableInputs");
+    var variableCount = inputContainer.children.length + 1; // +1 to create unique IDs
+    var newInput = document.createElement("div");
+
+    // Create input field
+    var inputField = document.createElement("input");
+    inputField.type = "text";
+    inputField.id = "variable" + variableCount;
+    inputField.name = "variables[]";
+
+    // Create label for the input field
+    var label = document.createElement("label");
+    label.htmlFor = "variable" + variableCount;
+    label.textContent = "Variable " + variableCount + ":";
+
+    // Create delete button
+    var deleteBtn = document.createElement("button");
+//    deleteBtn.textContent = "Delete";
+    deleteBtn.className = "delete-btn";
+
+    // Append elements to the new div
+    newInput.appendChild(label);
+    newInput.appendChild(inputField);
+    newInput.appendChild(deleteBtn);
+
+    // Append the new div to the input container
+    inputContainer.appendChild(newInput);
+}
+
+// Event delegation to handle click on delete buttons
+document.getElementById('variableInputs').addEventListener('click', function(event) {
+    if (event.target.classList.contains('delete-btn')) {
+        // Remove the parent div containing the input field, label, and delete button
+        event.target.parentElement.remove();
+    }
+});
+
+
+
+
+
+    // Get the modal
+        var modal = document.getElementById("myModal");
+
+        // Get the button that opens the modal
+        var btn = document.getElementById("executeTerraform");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks the button, open the modal
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+
+    document.getElementById('confirmBtn').addEventListener('click',function executeTerraform() {
         var formData = {
             cloudProvider: document.getElementById("cloudProvider").value,
             workenv: document.getElementById("workenv").value,
@@ -191,13 +387,14 @@
             if (xhr.readyState === XMLHttpRequest.DONE) {
                 if (xhr.status === 200) {
                    // console.log("Response:", xhr.responseText);
-
+		    document.getElementById("updateMessage").innerHTML = this.responseText;
                     console.error("Error:", xhr.status);
                 }
             }
         };
         xhr.send(jsonData);
-    }
+	modal.style.display = "none";
+    });
 
     function collectVariables() {
         var variables = [];
@@ -208,6 +405,13 @@
         }
         return variables;
     }
+
+    
+    document.getElementById('cancelBtn').addEventListener('click', function() {
+            // Close the modal
+            modal.style.display = "none";
+        });
+
 </script>
 
 <div id="loadBalancer" name="loadBalancer">
