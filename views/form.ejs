@@ -38,12 +38,12 @@
             padding: 20px;
             margin-bottom: 10px;
             width: 700px;
-            height: 300px;
+            height: 275px;
             border-radius: 8px;
             margin-left: 55%;
             margin-right: auto;
             margin-bottom: 10px;
-            margin-top: -58%; /* Adjusted margin-top */
+            margin-top: -53%; /* Adjusted margin-top */
         }
 
         div[name="wsoutput"] {
@@ -51,19 +51,19 @@
             padding: 20px;
             margin-bottom: 10px;
             width: 700px;
-            height: 300px;
+            height: 275px;
             border-radius: 8px;
             margin-left: 55%;
             margin-right: auto;
             margin-bottom: 20px;
-            margin-top: -58%;
+            margin-top: -53%;
         }
         div[name="loadBalancer"] {
-            margin-top: 20px;
+            margin-top: 10px;
         }
 
         div[name="webserver"] {
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
         div[name="updateMessage"]{
             background-color: lightblue;
@@ -115,7 +115,8 @@
         input {
             width: calc(100% - 1px); /* Adjusted input width */
             padding: 8px;
-            margin-bottom: 16px;
+	    margin-top: 0px;
+            margin-bottom: 4px;
             box-sizing: border-box;
         }
 
@@ -123,20 +124,23 @@
 
 
 	#variableInputs div {
-	    margin-bottom: 9px; /* Add margin between input divs */
+	    margin-bottom: 0px; /* Add margin between input divs */
 	}
 
 
-	#variableInputs div input {
-	    width: calc(100% - 40px); /* Calculate width for input fields (accounting for label width and margin) */
-	    padding: 8px; /* Apply padding to input fields */
-	    box-sizing: border-box; /* Ensure padding and border are included in width calculation */
+	#variableInputs div input {	
+	    width: calc(100% - 30px); /* Calculate width for input fields (accounting for label width and margin) */
+	    padding: 8px;
+/*	    box-sizing: border-box;*/
+	    margin-right: -7px;
+	    margin-top: -10px;
+	   
 	}
 
 #variableInputs div button {
-    margin-left: 7px; /* Add margin between input and button */
+    margin-left: 7px;
     padding: 8px; /* Apply padding to buttons */
-    box-sizing: border-box; /* Ensure padding and border are included in width calculation */
+    box-sizing: border-box;
 }
 
 
@@ -155,26 +159,23 @@
 	    	height: 250px;
 		overflow: auto;
 	}
-	.delete-btn{
-		width: 24px;
-		margin-left: 250px;
-		border: 2px solid black;
-		background-image: url('https://cdn-icons-png.flaticon.com/128/1214/1214428.png');
-		align-content: centre;
 	
-	}
 	.delete-btn {
     width: 30px; /* Set the width of the button */
     height: 30px; /* Set the height of the button */
-    margin-top: 30px;
-    margin-left: 10px; /* Adjust the left margin to create space between the input field and the button */
+    margin-top: 8px;
+    margin-bottom: 10px;
+    margin-left: 0px; /* Adjust the left margin to create space between the input field and the button */
     border: 0px solid black; /* Add a border to the button */
-    background-image: url('https://cdn-icons-png.flaticon.com/128/3597/3597073.png'); /* Set the background image of the button */
+    background-image: url("https://cdn-icons-png.flaticon.com/128/3917/3917211.png");
     background-size: cover; /* Scale the background image to cover the button */
     background-repeat: no-repeat; /* Prevent the background image from repeating */
     background-color: white; 
-    cursor: pointer; /* Set the cursor to indicate the button is clickable */
-}
+    cursor: pointer; 
+    border-radius: 50%;
+    align-items: center;
+  justify-content: center;
+  }
 
     </style>
 </head>
